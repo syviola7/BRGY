@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Administrator Login</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: #f5f5f5;
+            min-height: 100vh;
+        }
+
+        .login-container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        .left-panel {
+            flex: 1;
+            background: linear-gradient(135deg, #2e7d32 0%, #4caf50 100%);
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .right-panel {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 30px;
+            background: white;
+        }
+
+        .login-form {
+            width: 100%;
+            max-width: 380px;
+            padding: 40px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            border: 1px solid rgba(76,175,80,0.2);
+        }
+
+        .form-header {
+            text-align: center;
+            margin-bottom: 30px;
+            color: #2e7d32;
+            position: relative;
+        }
+
+        .form-header h1 {
+            font-size: 26px;
+            font-weight: 600;
+            margin-bottom: 5px;
+            position: relative;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #666;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 15px;
+            background: #fafafa;
+            transition: border-color 0.3s;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #4caf50;
+            background: white;
+        }
+
+        .form-options {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 20px 0;
+            font-size: 14px;
+        }
+
+        .checkbox-container {
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            color: #555;
+            user-select: none;
+        }
+
+        .checkbox {
+            width: 18px;
+            height: 18px;
+            border: 2px solid #ddd;
+            border-radius: 4px;
+            margin-right: 10px;
+            position: relative;
+            background: white;
+        }
+
+        .checkbox.checked {
+            background: #4caf50;
+            border-color: #4caf50;
+        }
+
+        .admin-link {
+            color: #4caf50;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .admin-link:hover {
+            text-decoration: underline;
+        }
+
+        .login-btn {
+            width: 100%;
+            padding: 14px;
+            background: #4caf50;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-bottom: 20px;
+            transition: background 0.3s;
+        }
+
+        .login-btn:hover {
+            background: #45a049;
+        }
+
+        .register-section {
+            text-align: center;
+            padding-top: 15px;
+            border-top: 1px solid #eee;
+        }
+
+        .register-text {
+            color: #666;
+            font-size: 13px;
+            margin-bottom: 8px;
+        }
+
+        .or-text {
+            color: #999;
+            font-size: 12px;
+            margin: 15px 0;
+        }
+
+        .back-link {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .back-link a {
+            color: #4caf50;
+            text-decoration: none;
+            font-size: 13px;
+            font-weight: 500;
+        }
+
+        .back-link a:hover {
+            text-decoration: underline;
+        }
+
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 12px 18px;
+            background: #4caf50;
+            color: white;
+            border-radius: 6px;
+            transform: translateX(300px);
+            transition: transform 0.3s;
+            z-index: 1000;
+            font-size: 14px;
+        }
+
+        .notification.show {
+            transform: translateX(0);
+        }
+
+        .notification.error {
+            background: #f44336;
+        }
+
+        @media (max-width: 768px) {
+            .login-container {
+                flex-direction: column;
+            }
+            
+            .left-panel {
+                height: 200px;
+            }
+            
+            .login-form {
+                margin: 20px;
+                padding: 25px;
+            }
+            
+            .form-header h1 {
+                font-size: 22px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <!-- Left Panel -->
+        <div class="left-panel"></div>
+
+        <!-- Right Panel -->
+        <div class="right-panel">
+            <div class="login-form">
+                <div class="form-header">
+                    <h1>Administrator Access</h1>
+                </div>
+                
+                <form id="loginForm">
+                    <div class="form-group">
+                        <label for="email">Your Email</label>
+                        <input type="email" id="email" placeholder="Enter your email" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="password">Your Password</label>
+                        <input type="password" id="password" placeholder="Enter your password" required>
+                    </div>
+                    
+                    <div class="form-options">
+                        <label class="checkbox-container">
+                            <span class="checkbox" id="rememberCheck"></span>
+                            Remember me
+                        </label>
+                        <a href="#" class="admin-link">Administrator Login</a>
+                    </div>
+                    
+                    <button type="submit" class="login-btn">Login</button>
+                </form>
+                
+                <div class="register-section">
+                    <div class="register-text">Don't have an account? Register here</div>
+                    <div class="or-text">OR</div>
+                </div>
+                
+                <div class="back-link">
+                    <a href="#">Back to Homepage</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const form = document.getElementById('loginForm');
+            const email = document.getElementById('email');
+            const password = document.getElementById('password');
+            const rememberCheck = document.getElementById('rememberCheck');
+            const adminLink = document.querySelector('.admin-link');
+            const backLink = document.querySelector('.back-link a');
+            const loginBtn = document.querySelector('.login-btn');
+
+            // Load saved credentials
+            if (localStorage.getItem('residentEmail')) {
+                email.value = localStorage.getItem('residentEmail');
+                rememberCheck.classList.add('checked');
+            }
+
+            // Remember me toggle
+            rememberCheck.addEventListener('click', function() {
+                this.classList.toggle('checked');
+            });
+
+            // Form submission
+            form.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                if (!email.value || !password.value) {
+                    showNotification('Please fill all fields', true);
+                    return;
+                }
+
+                if (!email.value.includes('@')) {
+                    showNotification('Please enter a valid email', true);
+                    return;
+                }
+
+                // Save if remember me is checked
+                if (rememberCheck.classList.contains('checked')) {
+                    localStorage.setItem('residentEmail', email.value);
+                } else {
+                    localStorage.removeItem('residentEmail');
+                }
+
+                // Show loading
+                const originalText = loginBtn.textContent;
+                loginBtn.textContent = 'Logging in...';
+                loginBtn.disabled = true;
+
+                // Simulate login
+                setTimeout(() => {
+                    showNotification('Login successful! Welcome back.');
+                    loginBtn.textContent = originalText;
+                    loginBtn.disabled = false;
+                    
+                    // Clear form after success
+                    setTimeout(() => {
+                        form.reset();
+                        rememberCheck.classList.remove('checked');
+                    }, 1000);
+                }, 1500);
+            });
+
+            // Admin link
+            adminLink.addEventListener('click', function(e) {
+                e.preventDefault();
+                if (confirm('Go to Administrator Login?')) {
+                    // Redirect to admin login
+                    alert('Redirecting to admin login...');
+                }
+            });
+
+            // Back link
+            backLink.addEventListener('click', function(e) {
+                e.preventDefault();
+                if (confirm('Go back to homepage?')) {
+                    window.location.href = '/';
+                }
+            });
+
+            // Focus first input
+            email.focus();
+
+            // Show notification
+            function showNotification(message, isError = false) {
+                const existing = document.querySelector('.notification');
+                if (existing) existing.remove();
+                
+                const notification = document.createElement('div');
+                notification.className = `notification ${isError ? 'error' : ''}`;
+                notification.textContent = message;
+                
+                document.body.appendChild(notification);
+                
+                setTimeout(() => notification.classList.add('show'), 100);
+                setTimeout(() => {
+                    notification.classList.remove('show');
+                    setTimeout(() => notification.remove(), 300);
+                }, 3000);
+            }
+        });
+    </script>
+</body>
+</html>
