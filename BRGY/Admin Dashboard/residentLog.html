@@ -1,0 +1,636 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resident Portal</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: #f5f5f5;
+            min-height: 100vh;
+        }
+
+        .login-container {
+            display: flex;
+            min-height: 100vh;
+            flex-direction: column;
+        }
+
+        .left-panel {
+            flex: 1;
+            background: linear-gradient(135deg, #2e7d32 0%, #4caf50 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 200px;
+        }
+
+        .left-panel h1 {
+            color: white;
+            font-size: 24px;
+            font-weight: 600;
+        }
+
+        .right-panel {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+
+        .form-container {
+            width: 100%;
+            max-width: 380px;
+            padding: 30px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            border: 1px solid rgba(76,175,80,0.2);
+        }
+
+        .form-header {
+            text-align: center;
+            margin-bottom: 30px;
+            color: #2e7d32;
+        }
+
+        .form-header h1 {
+            font-size: 26px;
+            font-weight: 600;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #666;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 15px;
+            background: #fafafa;
+            transition: border-color 0.3s;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #4caf50;
+            background: white;
+        }
+
+        .form-options {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 20px 0;
+            font-size: 14px;
+        }
+
+        .checkbox-container {
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            color: #555;
+            user-select: none;
+        }
+
+        .checkbox {
+            width: 18px;
+            height: 18px;
+            border: 2px solid #ddd;
+            border-radius: 4px;
+            margin-right: 10px;
+            background: white;
+        }
+
+        .checkbox.checked {
+            background: #4caf50;
+            border-color: #4caf50;
+        }
+
+        .admin-link {
+            color: #4caf50;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .admin-link:hover {
+            text-decoration: underline;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 14px;
+            background: #4caf50;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .submit-btn:hover {
+            background: #45a049;
+        }
+
+        .submit-btn:disabled {
+            background: #a5d6a7;
+            cursor: not-allowed;
+        }
+
+        .toggle-section {
+            text-align: center;
+            padding-top: 15px;
+            border-top: 1px solid #eee;
+        }
+
+        .toggle-text {
+            color: #666;
+            font-size: 13px;
+            margin-bottom: 8px;
+        }
+
+        .toggle-link {
+            color: #4caf50;
+            text-decoration: none;
+            font-weight: 500;
+            cursor: pointer;
+        }
+
+        .toggle-link:hover {
+            text-decoration: underline;
+        }
+
+        .or-text {
+            color: #999;
+            font-size: 12px;
+            margin: 15px 0;
+        }
+
+        .back-link {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .back-link a {
+            color: #4caf50;
+            text-decoration: none;
+            font-size: 13px;
+            font-weight: 500;
+        }
+
+        .back-link a:hover {
+            text-decoration: underline;
+        }
+
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 12px 18px;
+            background: #4caf50;
+            color: white;
+            border-radius: 6px;
+            transform: translateX(300px);
+            transition: transform 0.3s;
+            z-index: 1000;
+            font-size: 14px;
+        }
+
+        .notification.show {
+            transform: translateX(0);
+        }
+
+        .notification.error {
+            background: #f44336;
+        }
+
+        .form-hidden {
+            display: none;
+        }
+
+        .email-verification {
+            text-align: center;
+            padding: 20px;
+        }
+
+        .email-verification p {
+            color: #666;
+            font-size: 14px;
+            margin-bottom: 20px;
+        }
+
+        .email-verification a {
+            color: #4caf50;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .email-verification a:hover {
+            text-decoration: underline;
+        }
+
+        @media (min-width: 768px) {
+            .login-container {
+                flex-direction: row;
+            }
+
+            .left-panel {
+                height: auto;
+            }
+
+            .left-panel h1 {
+                font-size: 36px;
+            }
+
+            .right-panel {
+                padding: 40px;
+            }
+
+            .form-container {
+                padding: 40px;
+            }
+
+            .form-header h1 {
+                font-size: 28px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <!-- Left Panel -->
+        <div class="left-panel">
+            <h1>Barangay</h1>
+        </div>
+
+        <!-- Right Panel -->
+        <div class="right-panel">
+            <!-- Login Form -->
+            <div class="form-container" id="loginFormContainer">
+                <div class="form-header">
+                    <h1>Residents Access</h1>
+                </div>
+                
+                <form id="loginForm">
+                    <div class="form-group">
+                        <label for="loginEmail">Your Email</label>
+                        <input type="email" id="loginEmail" placeholder="Enter your email" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="loginPassword">Your Password</label>
+                        <input type="password" id="loginPassword" placeholder="Enter your password" required>
+                    </div>
+                    
+                    <div class="form-options">
+                        <label class="checkbox-container">
+                            <span class="checkbox" id="rememberCheck"></span>
+                            Remember me
+                        </label>
+                        <a href="adminLog.html" class="admin-link">Administrator Login</a>
+                    </div>
+                    
+                    <button type="submit" class="submit-btn">Login</button>
+                </form>
+                
+                <div class="toggle-section">
+                    <div class="toggle-text">Don't have an account? <span class="toggle-link" id="showRegister">Register here</span></div>
+                    <div class="or-text">OR</div>
+                    <div class="back-link">
+                        <a href="#">Back to Homepage</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Register Form -->
+            <div class="form-container form-hidden" id="registerFormContainer">
+                <div class="form-header">
+                    <h1>Create Account</h1>
+                </div>
+                
+                <form id="registerForm">
+                    <div class="form-group">
+                        <label for="registerFirstName">First Name</label>
+                        <input type="text" id="registerFirstName" placeholder="Enter your first name" required>
+                    </div>
+
+                     <div class="form-group">
+                        <label for="registerLastName">Last Name</label>
+                        <input type="text" id="registerLastName" placeholder="Enter your last name" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="registerEmail">Your Email</label>
+                        <input type="email" id="registerEmail" placeholder="Enter your email" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="registerPassword">Your Password</label>
+                        <input type="password" id="registerPassword" placeholder="Enter your password" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="confirmPassword">Confirm Password</label>
+                        <input type="password" id="confirmPassword" placeholder="Confirm your password" required>
+                    </div>
+                    
+                    <button type="submit" class="submit-btn">Register</button>
+                </form>
+                
+                <div class="toggle-section">
+                    <div class="toggle-text">Already have an account? <span class="toggle-link" id="showLogin">Login here</span></div>
+                    <div class="or-text">OR</div>
+                    <div class="back-link">
+                        <a href="#">Back to Homepage</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Verification Page -->
+            <div class="form-container form-hidden" id="verifyFormContainer">
+                <div class="form-header">
+                    <h1>Email Verification</h1>
+                </div>
+                <div class="email-verification">
+                    <p>Please check your email for a verification link. Click the "Click here to verify" link to activate your account.</p>
+                    <p>Didn't receive an email? <a href="#" id="resendVerification">Resend verification email</a></p>
+                </div>
+                <div class="back-link">
+                    <a href="#" id="backToLogin">Back to Login</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const loginForm = document.getElementById('loginForm');
+            const registerForm = document.getElementById('registerForm');
+            const loginFormContainer = document.getElementById('loginFormContainer');
+            const registerFormContainer = document.getElementById('registerFormContainer');
+            const verifyFormContainer = document.getElementById('verifyFormContainer');
+            const loginEmail = document.getElementById('loginEmail');
+            const loginPassword = document.getElementById('loginPassword');
+            const rememberCheck = document.getElementById('rememberCheck');
+            const registerName = document.getElementById('registerName');
+            const registerEmail = document.getElementById('registerEmail');
+            const registerPassword = document.getElementById('registerPassword');
+            const confirmPassword = document.getElementById('confirmPassword');
+            const showRegister = document.getElementById('showRegister');
+            const showLogin = document.getElementById('showLogin');
+            const backToLogin = document.getElementById('backToLogin');
+            const resendVerification = document.getElementById('resendVerification');
+            const adminLink = document.querySelector('.admin-link');
+            const backLinks = document.querySelectorAll('.back-link a');
+            const loginBtn = loginForm.querySelector('.submit-btn');
+            const registerBtn = registerForm.querySelector('.submit-btn');
+
+            // Load saved credentials
+            if (localStorage.getItem('residentEmail')) {
+                loginEmail.value = localStorage.getItem('residentEmail');
+                rememberCheck.classList.add('checked');
+            }
+
+            // Remember me toggle
+            rememberCheck.addEventListener('click', function() {
+                this.classList.toggle('checked');
+            });
+
+            // Toggle between forms
+            showRegister.addEventListener('click', function(e) {
+                e.preventDefault();
+                loginFormContainer.classList.add('form-hidden');
+                registerFormContainer.classList.remove('form-hidden');
+                registerEmail.focus();
+            });
+
+            showLogin.addEventListener('click', function(e) {
+                e.preventDefault();
+                registerFormContainer.classList.add('form-hidden');
+                loginFormContainer.classList.remove('form-hidden');
+                loginEmail.focus();
+            });
+
+            backToLogin.addEventListener('click', function(e) {
+                e.preventDefault();
+                verifyFormContainer.classList.add('form-hidden');
+                loginFormContainer.classList.remove('form-hidden');
+                loginEmail.focus();
+            });
+
+            // Simulate email verification link
+            function generateVerificationLink(email) {
+                const token = btoa(email + ':' + Date.now()); // Simple base64 token for simulation
+                return `#verify?email=${encodeURIComponent(email)}&token=${encodeURIComponent(token)}`;
+            }
+
+            // Handle registration
+            registerForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                if (!registerName.value || !registerEmail.value || !registerPassword.value || !confirmPassword.value) {
+                    showNotification('Please fill all fields', true);
+                    return;
+                }
+
+                if (!registerEmail.value.includes('@')) {
+                    showNotification('Please enter a valid email', true);
+                    return;
+                }
+
+                if (registerPassword.value !== confirmPassword.value) {
+                    showNotification('Passwords do not match', true);
+                    return;
+                }
+
+                // Show loading
+                registerBtn.textContent = 'Registering...';
+                registerBtn.disabled = true;
+
+                // Simulate registration and email sending
+                setTimeout(() => {
+                    // Store user data and verification status
+                    const userData = {
+                        email: registerEmail.value,
+                        name: registerName.value,
+                        password: registerPassword.value, // In real app, hash this
+                        verified: false
+                    };
+                    localStorage.setItem('user_' + registerEmail.value, JSON.stringify(userData));
+
+                    // Simulate sending verification email
+                    const verificationLink = generateVerificationLink(registerEmail.value);
+                    console.log(`Verification email sent to ${registerEmail.value}. Click here to verify: ${window.location.href}${verificationLink}`);
+                    showNotification('Registration successful! Please check your email to verify your account.');
+
+                    // Switch to verification page
+                    registerFormContainer.classList.add('form-hidden');
+                    verifyFormContainer.classList.remove('form-hidden');
+
+                    registerBtn.textContent = 'Register';
+                    registerBtn.disabled = false;
+                    registerForm.reset();
+                }, 1500);
+            });
+
+            // Handle login
+            loginForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                if (!loginEmail.value || !loginPassword.value) {
+                    showNotification('Please fill all fields', true);
+                    return;
+                }
+
+                if (!loginEmail.value.includes('@')) {
+                    showNotification('Please enter a valid email', true);
+                    return;
+                }
+
+                // Check if user exists and is verified
+                const userData = JSON.parse(localStorage.getItem('user_' + loginEmail.value));
+                if (!userData) {
+                    showNotification('No account found with this email', true);
+                    return;
+                }
+
+                if (!userData.verified) {
+                    showNotification('Please verify your email before logging in', true);
+                    loginFormContainer.classList.add('form-hidden');
+                    verifyFormContainer.classList.remove('form-hidden');
+                    return;
+                }
+
+                if (userData.password !== loginPassword.value) {
+                    showNotification('Incorrect password', true);
+                    return;
+                }
+
+                // Save if remember me is checked
+                if (rememberCheck.classList.contains('checked')) {
+                    localStorage.setItem('residentEmail', loginEmail.value);
+                } else {
+                    localStorage.removeItem('residentEmail');
+                }
+
+                // Show loading
+                loginBtn.textContent = 'Logging in...';
+                loginBtn.disabled = true;
+
+                // Simulate login
+                setTimeout(() => {
+                    showNotification('Login successful! Welcome back.');
+                    loginBtn.textContent = 'Login';
+                    loginBtn.disabled = false;
+                    loginForm.reset();
+                    rememberCheck.classList.remove('checked');
+                }, 1500);
+            });
+
+            // Resend verification email
+            resendVerification.addEventListener('click', function(e) {
+                e.preventDefault();
+                const email = loginEmail.value || registerEmail.value;
+                if (!email) {
+                    showNotification('Please enter your email first', true);
+                    verifyFormContainer.classList.add('form-hidden');
+                    loginFormContainer.classList.remove('form-hidden');
+                    return;
+                }
+                const verificationLink = generateVerificationLink(email);
+                console.log(`Verification email resent to ${email}. Click here to verify: ${window.location.href}${verificationLink}`);
+                showNotification('Verification email resent. Please check your email.');
+            });
+
+            // Handle verification from URL
+            function handleVerification() {
+                const hash = window.location.hash;
+                if (hash.startsWith('#verify')) {
+                    const params = new URLSearchParams(hash.replace('#verify', ''));
+                    const email = params.get('email');
+                    const token = params.get('token');
+                    
+                    if (email && token) {
+                        const userData = JSON.parse(localStorage.getItem('user_' + email));
+                        if (userData) {
+                            userData.verified = true;
+                            localStorage.setItem('user_' + email, JSON.stringify(userData));
+                            showNotification('Email verified successfully! You can now log in.');
+                            loginFormContainer.classList.remove('form-hidden');
+                            verifyFormContainer.classList.add('form-hidden');
+                            loginEmail.value = email;
+                            loginEmail.focus();
+                            window.location.hash = ''; // Clear hash
+                        } else {
+                            showNotification('Invalid verification link', true);
+                        }
+                    }
+                }
+            }
+
+            // Check for verification on page load
+            handleVerification();
+
+            // Admin link
+            adminLink.addEventListener('click', function(e) {
+                e.preventDefault();
+                if (confirm('Go to Administrator Login?')) {
+                     window.location.href = 'adminLog.html';
+                }
+            });
+
+            // Back links
+            backLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    if (confirm('Go back to homepage?')) {
+                        window.location.href = '##';
+                    }
+                });
+            });
+
+            // Focus first input
+            loginEmail.focus();
+
+            // Show notification
+            function showNotification(message, isError = false) {
+                const existing = document.querySelector('.notification');
+                if (existing) existing.remove();
+                
+                const notification = document.createElement('div');
+                notification.className = `notification ${isError ? 'error' : ''}`;
+                notification.textContent = message;
+                
+                document.body.appendChild(notification);
+                
+                setTimeout(() => notification.classList.add('show'), 100);
+                setTimeout(() => {
+                    notification.classList.remove('show');
+                    setTimeout(() => notification.remove(), 300);
+                }, 3000);
+            }
+        });
+    </script>
+</body>
+</html>
